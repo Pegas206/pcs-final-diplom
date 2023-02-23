@@ -17,6 +17,7 @@ import java.util.stream.Stream;
 public class BooleanSearchEngine implements SearchEngine {
     private Set<String> words;
     private List<Path> listPDF;
+    private int k = 0;
 
     public BooleanSearchEngine(File pdfsDir) throws IOException {
         // прочтите тут все pdf и сохраните нужные данные,
@@ -28,13 +29,14 @@ public class BooleanSearchEngine implements SearchEngine {
         // Перебор всех документов из списка и чтение
         Iterator<Path> itr = listPDF.iterator();
         while (itr.hasNext()) {
-            System.out.println(itr.next());
-
+            System.out.println(listPDF.get(k));
+            k++;
             var doc = new PdfDocument(new PdfReader(itr.next().toFile()));
             // Получаю количество страниц
             int number_of_pages = doc.getNumberOfPages();
             // Перебираю все страницы и перевожу в мапу
-            for (int i = 0; i < number_of_pages; i++) {
+            for (int i = 1; i <= number_of_pages; i++) {
+                System.out.println("Страница " + i);
 
                 PdfPage page = doc.getPage(i);
                 var text = PdfTextExtractor.getTextFromPage(page);
@@ -49,8 +51,10 @@ public class BooleanSearchEngine implements SearchEngine {
                     word = word.toLowerCase();
                     freqs.put(word, freqs.getOrDefault(word, 0) + 1);
                 }
+                // в чем хранить мапу?????
             }
         }
+        System.out.println("Документы обработаны");
 
     }
 
