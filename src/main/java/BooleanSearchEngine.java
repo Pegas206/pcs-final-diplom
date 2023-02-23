@@ -3,20 +3,20 @@ import com.itextpdf.kernel.pdf.PdfPage;
 import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.canvas.parser.PdfTextExtractor;
 
-import java.io.Console;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
+
+
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
 public class BooleanSearchEngine implements SearchEngine {
-    private Set<String> words;
-    private List<Path> listPDF;
+        private List<Path> listPDF;
     private int k = 0;
 
     public BooleanSearchEngine(File pdfsDir) throws IOException {
@@ -41,7 +41,6 @@ public class BooleanSearchEngine implements SearchEngine {
                 PdfPage page = doc.getPage(i);
                 var text = PdfTextExtractor.getTextFromPage(page);
                 var words = text.split("\\P{IsAlphabetic}+");
-                System.out.println(words);
 
                 Map<String, Integer> freqs = new HashMap<>(); // мапа, где ключом будет слово, а значением - частота
                 for (var word : words) { // перебираем слова
@@ -51,7 +50,19 @@ public class BooleanSearchEngine implements SearchEngine {
                     word = word.toLowerCase();
                     freqs.put(word, freqs.getOrDefault(word, 0) + 1);
                 }
+                System.out.println(freqs);
+
                 // в чем хранить мапу?????
+//                Iterator<Map.Entry<String, Integer>> itrMap = freqs.entrySet().iterator();
+//                while(itrMap.hasNext()) {
+//                    Map.Entry<String, Integer> entry = itrMap.next();
+//                    // get key
+//                    String key = entry.getKey();
+//                    // get value
+//                    int value = entry.getValue();
+
+
+//                }
             }
         }
         System.out.println("Документы обработаны");
@@ -72,15 +83,9 @@ public class BooleanSearchEngine implements SearchEngine {
 
     @Override
     public List<PageEntry> search(String word) {
-        return null;
+
         // тут реализуйте поиск по слову
-//        words = new HashSet<>(List.of(word.split("\\P{IsAlphabetic}+")));
-//
-////        return words.contains(word);
-//        return Collections.emptyList();
-//    }
-//
-//    public boolean hasWord(String word) {
-//        return words.contains(word);
+System.out.println(word);
+        return null;
     }
 }
