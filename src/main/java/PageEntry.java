@@ -2,12 +2,14 @@ public class PageEntry implements Comparable<PageEntry> {
     private final String pdfName;
     private final int page;
     private final int count;
-
+    //static List<String> ttt = new ArrayList<String>();
     public PageEntry(String pdfName, int page, int count) {
-        this.pdfName = pdfName;
+        this.pdfName = pdfName.substring(5);
         this.page = page;
         this.count = count;
     }
+
+
 
     @Override
     public int compareTo(PageEntry o) {
