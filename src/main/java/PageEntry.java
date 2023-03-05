@@ -1,8 +1,22 @@
+import org.json.simple.JSONObject;
+
 public class PageEntry implements Comparable<PageEntry> {
     private final String pdfName;
     private final int page;
     private final int count;
-    //static List<String> ttt = new ArrayList<String>();
+
+    public String getPdfName() {
+        return pdfName;
+    }
+
+    public int getPage() {
+        return page;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
     public PageEntry(String pdfName, int page, int count) {
         this.pdfName = pdfName.substring(5);
         this.page = page;
@@ -10,20 +24,10 @@ public class PageEntry implements Comparable<PageEntry> {
     }
 
 
-
     @Override
     public int compareTo(PageEntry o) {
-//
-//    if (getSurname().length() < o.surname.length()) {
-//        return 1;
-//    } else if (getSurname().length() > o.surname.length()) {
-//        return -1;
-//    } else if (getAge() < o.age){
-//        return 1;
-//    }else if (getAge() > o.age){
-//        return -1;
-//    }
+
         return 0;
-}
+    }
 
 }

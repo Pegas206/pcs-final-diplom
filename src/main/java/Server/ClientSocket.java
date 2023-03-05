@@ -1,7 +1,6 @@
 package Server;
 
 
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -23,25 +22,14 @@ public class ClientSocket {
                     System.out.println(in.readLine());
                     System.out.println("Нажмите Ввод чтобы продолжить или end чтобы выйти");
                     if ("end".equals(scanner.nextLine())) {
-
                         break;
-                    }else {
-
-
-
-
-
-
                     }
                 }
-
-
             } catch (UnknownHostException e) {
                 throw new RuntimeException(e);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-
         }
     }
 }
