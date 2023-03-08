@@ -14,7 +14,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static java.lang.System.out;
 
 public class BooleanSearchEngine implements SearchEngine {
     private List<Path> listPDF;
@@ -54,19 +53,19 @@ public class BooleanSearchEngine implements SearchEngine {
                     //Проверяю есть ли повторяющиеся слова, если есть добавляю в List
                     if (wordItog.containsKey(keyItr)) {
                         List<PageEntry> ListofValues = wordItog.get(keyItr);
-                    // Получаю предыдущее значение списка данного слова
+                        // Получаю предыдущее значение списка данного слова
                         ListofValues.add(new PageEntry(String.valueOf(listPDF.get(k)), i, valueItr));
                         //  И здесь я добавляю в ключ новое значение и старое
                         wordItog.put(keyItr, ListofValues);
                     } else {
                         wordItog.put(keyItr, new ArrayList(Collections.singleton(new PageEntry(String.valueOf(listPDF.get(k)), i, valueItr))));
-                        out.println();
+                        System.out.println();
                     }
                 }
             }
             k++;
         }
-        out.println("Документы обработаны");
+        System.out.println("Документы обработаны");
     }
 
     // данный метод ищет все PDF-документ в папке pdfs и заносит в список.
@@ -83,10 +82,15 @@ public class BooleanSearchEngine implements SearchEngine {
         String json = null;
         if (wordItog.containsKey(word)) {
             List<PageEntry> ListKey = wordItog.get(word);
+            ListKey.sort((o1, o2) -> {
+                if (o1.getCount() == o2.getCount()) return 0;
+                else if (o1.getCount() < o2.getCount()) return 1;
+                else return -1;
+            });
             ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
             try {
                 json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(ListKey);
-                out.println(json);
+                System.out.println(json);
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
