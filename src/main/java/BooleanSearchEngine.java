@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 
 public class BooleanSearchEngine implements SearchEngine {
     private List<Path> listPDF;
-    private HashMap<Object, List<PageEntry>> wordItog = new HashMap<Object, List<PageEntry>>();
+    private HashMap<String, List<PageEntry>> finalListOfWords = new HashMap<String, List<PageEntry>>();
     private int k = 0;
 
     public BooleanSearchEngine(File pdfsDir) throws IOException {
@@ -51,14 +51,24 @@ public class BooleanSearchEngine implements SearchEngine {
                     // get value
                     int valueItr = entry.getValue();
                     //Проверяю есть ли повторяющиеся слова, если есть добавляю в List
-                    if (wordItog.containsKey(keyItr)) {
-                        List<PageEntry> ListofValues = wordItog.get(keyItr);
+                    if (finalListOfWords.containsKey(keyItr)) {
+                        List<PageEntry> ListValues = finalListOfWords.get(keyItr);
+
                         // Получаю предыдущее значение списка данного слова
-                        ListofValues.add(new PageEntry(String.valueOf(listPDF.get(k)), i, valueItr));
+                        ListValues.add(new PageEntry(String.valueOf(listPDF.get(k)), i, valueItr));
+                        ListValues.sort((o1, o2) -> {
+                            if (o1.getCount() == o2.getCount()) {
+                                return 0;
+                            } else if (o1.getCount() < o2.getCount()) {
+                                return 1;
+                            } else {
+                                return -1;
+                            }
+                        });
                         //  И здесь я добавляю в ключ новое значение и старое
-                        wordItog.put(keyItr, ListofValues);
+                        finalListOfWords.put(keyItr, ListValues);
                     } else {
-                        wordItog.put(keyItr, new ArrayList(Collections.singleton(new PageEntry(String.valueOf(listPDF.get(k)), i, valueItr))));
+                        finalListOfWords.put(keyItr, new ArrayList(Collections.singleton(new PageEntry(String.valueOf(listPDF.get(k)), i, valueItr))));
                         System.out.println();
                     }
                 }
@@ -80,13 +90,8 @@ public class BooleanSearchEngine implements SearchEngine {
     @Override
     public String search(String word) {
         String json = null;
-        if (wordItog.containsKey(word)) {
-            List<PageEntry> ListKey = wordItog.get(word);
-            ListKey.sort((o1, o2) -> {
-                if (o1.getCount() == o2.getCount()) return 0;
-                else if (o1.getCount() < o2.getCount()) return 1;
-                else return -1;
-            });
+        if (finalListOfWords.containsKey(word)) {
+            List<PageEntry> ListKey = finalListOfWords.get(word);
             ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
             try {
                 json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(ListKey);
