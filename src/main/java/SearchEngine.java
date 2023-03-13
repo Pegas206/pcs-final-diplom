@@ -1,4 +1,7 @@
+import java.util.List;
+
 public interface SearchEngine {
-    Object search(String word);
+
+    List<PageEntry> search(String word);
 
 }

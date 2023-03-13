@@ -82,7 +82,7 @@ public class BooleanSearchEngine implements SearchEngine {
     }
 
     @Override
-    public Object search(String word) {
+    public  List<PageEntry> search(String word) {
 
         if (finalListOfWords.containsKey(word)) {
             List<PageEntry> ListKey = finalListOfWords.get(word);
