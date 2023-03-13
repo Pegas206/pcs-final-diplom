@@ -1,3 +1,7 @@
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -19,7 +23,15 @@ public class Main {
                             if (clientSocket.getPort() > 0) {
                                 out.println("Какое слово будем искать?");
                             }
-                            out.println(engine.search(in.readLine().toLowerCase()));
+                            String json = null;
+                            ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+                            try {
+                                json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(engine.search(in.readLine().toLowerCase()));
+                                System.out.println(json);
+                            } catch (JsonProcessingException e) {
+                                throw new RuntimeException(e);
+                            }
+                            out.println("Поиск выполнен");
 
                             if ("end".equals(in.readLine())) {
                                 break;

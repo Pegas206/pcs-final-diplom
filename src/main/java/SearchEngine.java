@@ -1,4 +1,4 @@
 public interface SearchEngine {
-    String search(String word);
+    Object search(String word);
 
 }

@@ -1,6 +1,3 @@
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfPage;
 import com.itextpdf.kernel.pdf.PdfReader;
@@ -18,19 +15,17 @@ import java.util.stream.Stream;
 public class BooleanSearchEngine implements SearchEngine {
     private List<Path> listPDF;
     private HashMap<String, List<PageEntry>> finalListOfWords = new HashMap<String, List<PageEntry>>();
-    private int k = 0;
 
     public BooleanSearchEngine(File pdfsDir) throws IOException {
 
         listFiles(pdfsDir.toPath());
         // Перебор всех документов из списка и чтение
-        Iterator<Path> itr = listPDF.iterator();
-        while (itr.hasNext()) {
-            var doc = new PdfDocument(new PdfReader(itr.next().toFile()));
+        for (int k = 0; k < listPDF.size(); k++) {
+            var doc = new PdfDocument(new PdfReader(listPDF.get(k).toFile()));
             // Получаю количество страниц
-            int number_of_pages = doc.getNumberOfPages();
+            int numberOfPages = doc.getNumberOfPages();
             // Перебираю все страницы и перевожу в мапу
-            for (int i = 1; i <= number_of_pages; i++) {
+            for (int i = 1; i <= numberOfPages; i++) {
                 PdfPage page = doc.getPage(i);
                 var text = PdfTextExtractor.getTextFromPage(page);
                 var words = text.split("\\P{IsAlphabetic}+");
@@ -43,13 +38,13 @@ public class BooleanSearchEngine implements SearchEngine {
                     freqs.put(word, freqs.getOrDefault(word, 0) + 1);
                 }
                 // в чем хранить
-                Iterator<Map.Entry<String, Integer>> itrMap = freqs.entrySet().iterator();
-                while (itrMap.hasNext()) {
-                    Map.Entry<String, Integer> entry = itrMap.next();
-                    // get key
+                for (Map.Entry<String, Integer> entry: freqs.entrySet())
+
+                {   // get key
                     String keyItr = entry.getKey();
                     // get value
                     int valueItr = entry.getValue();
+
                     //Проверяю есть ли повторяющиеся слова, если есть добавляю в List
                     if (finalListOfWords.containsKey(keyItr)) {
                         List<PageEntry> ListValues = finalListOfWords.get(keyItr);
@@ -73,7 +68,6 @@ public class BooleanSearchEngine implements SearchEngine {
                     }
                 }
             }
-            k++;
         }
         System.out.println("Документы обработаны");
     }
@@ -88,20 +82,14 @@ public class BooleanSearchEngine implements SearchEngine {
     }
 
     @Override
-    public String search(String word) {
-        String json = null;
+    public Object search(String word) {
+
         if (finalListOfWords.containsKey(word)) {
             List<PageEntry> ListKey = finalListOfWords.get(word);
-            ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
-            try {
-                json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(ListKey);
-                System.out.println(json);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
+return ListKey;
 
         }
-        return json;
+        return null;
     }
 }
 
