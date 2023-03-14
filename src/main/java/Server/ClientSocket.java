@@ -1,6 +1,9 @@
 package Server;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -19,7 +22,11 @@ public class ClientSocket {
                 {
                     System.out.println(in.readLine());
                     out.println(scanner.nextLine());
-                    System.out.println(in.readLine());
+                    ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+                    String jsonClient = in.readLine();
+                    Object jsonObject = mapper.readValue(jsonClient, Object.class);
+                    String prettyFormatted = mapper.writeValueAsString(jsonObject);
+                    System.out.println(prettyFormatted);
                     System.out.println("Нажмите Ввод чтобы продолжить или end чтобы выйти");
                     if ("end".equals(scanner.nextLine())) {
                         break;
