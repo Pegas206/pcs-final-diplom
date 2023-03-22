@@ -38,36 +38,40 @@ public class BooleanSearchEngine implements SearchEngine {
                     freqs.put(word, freqs.getOrDefault(word, 0) + 1);
                 }
                 // в чем хранить
-                for (Map.Entry<String, Integer> entry: freqs.entrySet())
-
-                {   // get key
+                for (Map.Entry<String, Integer> entry : freqs.entrySet()) {
+                    // get key
                     String keyItr = entry.getKey();
                     // get value
                     int valueItr = entry.getValue();
 
                     //Проверяю есть ли повторяющиеся слова, если есть добавляю в List
                     if (finalListOfWords.containsKey(keyItr)) {
-                        List<PageEntry> ListValues = finalListOfWords.get(keyItr);
+                        List<PageEntry> listValues = finalListOfWords.get(keyItr);
 
                         // Получаю предыдущее значение списка данного слова
-                        ListValues.add(new PageEntry(String.valueOf(listPDF.get(k)), i, valueItr));
-                        ListValues.sort((o1, o2) -> {
-                            if (o1.getCount() == o2.getCount()) {
-                                return 0;
-                            } else if (o1.getCount() < o2.getCount()) {
-                                return 1;
-                            } else {
-                                return -1;
-                            }
-                        });
+                        listValues.add(new PageEntry(String.valueOf(listPDF.get(k)), i, valueItr));
                         //  И здесь я добавляю в ключ новое значение и старое
-                        finalListOfWords.put(keyItr, ListValues);
+                        finalListOfWords.put(keyItr, listValues);
                     } else {
                         finalListOfWords.put(keyItr, new ArrayList(Collections.singleton(new PageEntry(String.valueOf(listPDF.get(k)), i, valueItr))));
-                        System.out.println();
                     }
                 }
             }
+        }
+//        Сортировка списков со значениями
+        for (Map.Entry<String, List<PageEntry>> sortMap : finalListOfWords.entrySet()) {
+            String keySort = sortMap.getKey();
+            List<PageEntry> listSort = sortMap.getValue();
+            listSort.sort((o1, o2) -> {
+                if (o1.getCount() == o2.getCount()) {
+                    return 0;
+                } else if (o1.getCount() < o2.getCount()) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            });
+            finalListOfWords.put(keySort, listSort);
         }
         System.out.println("Документы обработаны");
     }
@@ -82,14 +86,14 @@ public class BooleanSearchEngine implements SearchEngine {
     }
 
     @Override
-    public  List<PageEntry> search(String word) {
+    public List<PageEntry> search(String word) {
 
         if (finalListOfWords.containsKey(word)) {
-            List<PageEntry> ListKey = finalListOfWords.get(word);
-return ListKey;
+            List<PageEntry> listKey = finalListOfWords.get(word);
+            return listKey;
 
         }
-        return null;
+        return new ArrayList<>();
     }
 }
 
