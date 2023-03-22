@@ -30,7 +30,7 @@ public class BooleanSearchEngine implements SearchEngine {
                 var text = PdfTextExtractor.getTextFromPage(page);
                 var words = text.split("\\P{IsAlphabetic}+");
                 Map<String, Integer> freqs = new HashMap<>(); // мапа, где ключом будет слово, а значением - частота
-                for (var word : words) { // перебираем слова
+                for (var word : words) {
                     if (word.isEmpty()) {
                         continue;
                     }
